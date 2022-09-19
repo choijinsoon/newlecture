@@ -7,9 +7,15 @@ import java.util.Scanner;
 
 public class TestCoding {
 	public static void main(String[] args) {
-		String phone_number = "01033334444";
-		String answer = "";
+
+		Student s = new Student();
+
+		s.sg = new StudentGroup[3];
 		
+		s.sg[0].group = "1";
 		
+		System.out.println(s.sg[0].group);
+		
+
 	}
 }

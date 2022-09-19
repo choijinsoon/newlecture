@@ -6,7 +6,4 @@ public class Exam {
 	int eng;
 	int math;
 
-
-
-
 }

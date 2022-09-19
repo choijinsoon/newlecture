@@ -1,4 +1,4 @@
-package com.newlecture.homwork;
+package com.newlecture.homework_report;
 
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -14,11 +14,10 @@ public class Program33 {
 
 		Scanner sc = new Scanner(System.in);
 		// pnum = 학생수
-		int pnum = 0;
+
 		// 메뉴 2. : 자동입력 부분에서 배열의 크기를 늘리기위함
 		int max = 1;
-		// 메뉴 2. : 자동입력을 실행했다면 auto를 true로 변경
-		boolean auto = false;
+
 		// 학생을 담을 변수 studentsArr 선언
 		String[] studentsArr = new String[1];
 
@@ -28,185 +27,56 @@ public class Program33 {
 		String[] group4 = new String[1];
 		String[] group5 = new String[1];
 
-		String[] studentAuto = new String[max]; // 메뉴 2. 자동입력에서 메모장에 있는 학생명단을 받아올 배열
+		StudentsInfo studentsInfo = new StudentsInfo();
 
 		EXIT: while (true) {
 
-			System.out.println("");
-			System.out.println("  ┏━━━━* " + "자리배치" + "━━━━┓");
-			System.out.println("  ┃                  *");
-			System.out.println("  ┃   1. 학생 입력   ┃");
-			System.out.println("  ┃   2. 자동 입력   ┃");
-			System.out.println("  ┃   3. 자리 섞기   ┃");
-			System.out.println("  ┃   4. 파일 저장   ┃");
-			System.out.println("  ┃   5. 콘솔 출력   ┃");
-			System.out.println("  ┃   6. 종료 하기   ┃");
-			System.out.print("  ┗    ₍ᐢᐢ₎·°선택 >");
-			int menu = sc.nextInt();
+			int menu = inputMenu();
 
 			switch (menu) {
 
-			// ================================================1.
-			// 학생입력=======================================================
-			case 1: {
-				System.out.print("학생 수를 입력하세요>>");
-				pnum = sc.nextInt();
-				studentsArr = new String[pnum];
+//================================================1. 학생입력=======================================================               
+			case 1:
+				inputStudents(studentsInfo);
 
-				for (int i = 0; i < pnum; i++) {
-					System.out.print((i + 1) + "번째학생이름>>\n");
-					String name = sc.next();
-					studentsArr[i] = name;
-				}
-			}
 				break;
-			// ================================================2.
-			// 자동입력===========================================================
+//================================================2. 자동입력===========================================================            
 			case 2: {
-				FileInputStream fis = new FileInputStream("res/list.csv");
-				Scanner fscan = new Scanner(fis);
-				// 맨 첫줄 "학생목록" 은 건너뛰게한다.
-				System.out.println(fscan.nextLine());
-
-				// index는 배열에 담긴 값의 갯수이다. 만약 index가 배열크기를 초과한다면, 임의적으로 배열을 늘려줄 것.
-				int index = 0;
-
-				while (fscan.hasNext()) {
-					if (index >= max) {
-						String[] sTemp = new String[max + 1];
-						for (int i = 0; i < index; i++)
-							sTemp[i] = studentAuto[i];
-
-						studentAuto = sTemp;
-						max = max + 1;
-					} // end of if
-
-					studentAuto[index] = fscan.nextLine();
-					index++;
-					auto = true; // 자동입력이 실행되었다면 auto 를 true로 변경
-				} // end of while
-
-				System.out.println("자동입력으로 받아온 학생명단" + Arrays.toString(studentAuto));
+//				FileInputStream fis = new FileInputStream("res/list.csv");
+//				Scanner fscan = new Scanner(fis);
+//				// 맨 첫줄 "학생목록" 은 건너뛰게한다.
+//				System.out.println(fscan.nextLine());
+//
+//				// index는 배열에 담긴 값의 갯수이다. 만약 index가 배열크기를 초과한다면, 임의적으로 배열을 늘려줄 것.
+//				int index = 0;
+//
+//				while (fscan.hasNext()) {
+//					if (index >= max) {
+//						String[] sTemp = new String[max + 1];
+//						for (int i = 0; i < index; i++)
+//							sTemp[i] = studentAuto[i];
+//
+//						studentAuto = sTemp;
+//						max = max + 1;
+//					} // end of if
+//
+//					studentAuto[index] = fscan.nextLine();
+//					index++;
+//					auto = true; // 자동입력이 실행되었다면 auto 를 true로 변경
+//				} // end of while
+//
+//				System.out.println(Arrays.toString(studentAuto));
 
 			} // end of case2
 				break;
 
-			// ================================================3.
-			// 자리섞기===========================================================
-			case 3: {
-				System.out.println("자동입력했나요?" + auto);
+//================================================3. 자리섞기===========================================================            
+			case 3:
+				seatMix(studentsInfo);
 
-				if (auto == true) {
-					// 학생이름을 직접 입력한 것이 아니라, 자동으로 받아왔다면
-					// studentsArr이 studentAuto이름표를 가지도록 변경
-					studentsArr = studentAuto;
-					// pnum을 입력 받지 않았기때문에 , studentsArr배열의 크기에 pnum 라벨을 붙인다.
-					pnum = studentsArr.length;
-				}
-
-				// 랜덤한 숫자를 받을 1차원 randomArr - String으로 선언한 이유는 아래 2차원배열에 이름과 숫자를 함께담기위함
-				String[] randomArr = new String[pnum];
-				Random rand = new Random();
-
-				// 랜덤 배열에서 중복숫자 제거
-				for (int i = 0; i < randomArr.length; i++) {
-					randomArr[i] = Integer.toString(rand.nextInt(pnum) + 1);
-					for (int j = 0; j < i; j++) {
-						if (randomArr[i].equals(randomArr[j]))
-							i--;
-					}
-				}
-
-				System.out.println("랜덤 숫자 배열입니다." + Arrays.toString(randomArr));
-				System.out.println("학생 이름 배열입니다." + Arrays.toString(studentsArr));
-				System.out.println();
-
-				// 학생의 이름을 저장한 studentArr과 randomArr의 인덱스를 매칭시켜서 2차원 배열에 담아준다.
-				String[][] matchArr = new String[pnum][2];
-				for (int i = 0; i < pnum; i++) {
-					matchArr[i][0] = studentsArr[i];
-					matchArr[i][1] = randomArr[i];
-				}
-
-				System.out.println("매칭 시킨 배열입니다." + Arrays.deepToString(matchArr));
-				System.out.println();
-
-				// 랜덤으로 저장되어있는 숫자를 이름과 함께 1번부터 순서대로 정렬해준다.
-				// String numTemp = 숫자를 저장할 임시공간
-				// String nameTemp = 이름을 저장할 임시공간
-				// 2개씩 비교하기때문에 총 길이보다 -1
-				int sort = matchArr.length - 1;
-				for (int j = 0; j < sort; j++)
-					for (int i = 0; i < sort - j; i++) {
-						// 오름차순 정렬
-						if (Integer.parseInt(matchArr[i][1]) > Integer.parseInt(matchArr[i + 1][1])) {
-							String numTemp;
-							String nameTemp;
-							numTemp = matchArr[i][1];
-							matchArr[i][1] = matchArr[i + 1][1];
-							matchArr[i + 1][1] = numTemp;
-
-							nameTemp = matchArr[i][0];
-							matchArr[i][0] = matchArr[i + 1][0];
-							matchArr[i + 1][0] = nameTemp;
-						}
-					}
-
-				System.out.println("정렬후 배열입니다." + Arrays.deepToString(matchArr));
-				System.out.println();
-
-				System.out.println("1,4,5조는 6명 / 2,3조는 4명으로 고정!");
-
-				final int GNUM1 = 6;
-				final int GNUM4 = 6;
-				final int GNUM5 = 6;
-				final int GNUM2 = 4;
-				final int GNUM3 = 4;
-
-				group1 = new String[GNUM1];
-				group2 = new String[GNUM2];
-				group3 = new String[GNUM3];
-				group4 = new String[GNUM4];
-				group5 = new String[GNUM5];
-
-				int count = 0; // 배열의 크기, 0~학생수만큼 증가하면서 저장된 이름값을 순서대로 받아올 수 있도록
-
-				for (int i = 0; i < GNUM1; i++) {
-					group1[i] = matchArr[count][0];
-					count++;
-				}
-
-				for (int i = 0; i < GNUM2; i++) {
-					group2[i] = matchArr[count][0];
-					count++;
-				}
-
-				for (int i = 0; i < GNUM3; i++) {
-					group3[i] = matchArr[count][0];
-					count++;
-				}
-
-				for (int i = 0; i < GNUM4; i++) {
-					group4[i] = matchArr[count][0];
-					count++;
-				}
-
-				for (int i = 0; i < GNUM5; i++) {
-					group5[i] = matchArr[count][0];
-					count++;
-				}
-
-				System.out.println("1조입니다: " + Arrays.toString(group1));
-				System.out.println("2조입니다: " + Arrays.toString(group2));
-				System.out.println("3조입니다: " + Arrays.toString(group3));
-				System.out.println("4조입니다: " + Arrays.toString(group4));
-				System.out.println("5조입니다: " + Arrays.toString(group5));
-
-			}
 				break;
 
-			// ================================================4.
-			// 파일저장===========================================================
+//================================================4. 엑셀출력===========================================================   
 			case 4: {
 
 				FileOutputStream fos = new FileOutputStream("res/seat.csv");
@@ -250,8 +120,8 @@ public class Program33 {
 				ps.close();
 			}
 				break;
-			// ================================================5.
-			// 콘솔출력===========================================================
+
+//================================================5. 콘솔출력===========================================================            
 			case 5: {
 
 				String emptySeat = "   X  ";
@@ -261,13 +131,13 @@ public class Program33 {
 				String middleCrossBound = new String("├─────────────────┤");
 				String lowerBound = new String("└─────────────────┘");
 
-//	                           두번째 섹션에서, 같은 줄에 있는 자리들의 간격      
+//                           두번째 섹션에서, 같은 줄에 있는 자리들의 간격      
 				String seatSpace = new String(" ");
 
-//	                           첫번째 섹션에서, 각 조별 인원들을 출력하는 왼쪽 간격
+//                           첫번째 섹션에서, 각 조별 인원들을 출력하는 왼쪽 간격
 				String section1_leftSpace = new String("               ");
 
-//	                           두번째 섹션에서, 강의실 전체 자리 배치를 출력하는 왼쪽 간격
+//                           두번째 섹션에서, 강의실 전체 자리 배치를 출력하는 왼쪽 간격
 				String section2_leftSpace = new String("     ");
 
 				System.out.println();
@@ -405,19 +275,190 @@ public class Program33 {
 
 			}
 				break;
-			// ================================================6.
-			// 종료하기==========================================================
+//================================================6. 종료하기==========================================================         
 
 			case 6:
 				System.out.println("프로그램 종료");
 				break EXIT;
 
 			default:
-				System.out.println("1~7사이 값만 입력하세요");
+				System.out.println("1~6사이 값만 입력하세요");
 				break;
 			} // end of switch
 		} // end of while
 
 	}// end of main
+
+	private static void seatMix(StudentsInfo studentsInfo) {
+		// 메뉴 2. : 자동입력을 실행했다면 auto를 true로 변경
+		boolean auto = false;
+		// 메뉴 2. 자동입력에서 메모장에 있는 학생명단을 받아올 배열
+		studentsInfo.studentAuto = new String[1];
+
+		System.out.println("자동입력했나요?" + auto);
+
+		if (auto == true) {
+			// 학생이름을 직접 입력한 것이 아니라, 자동으로 받아왔다면
+			// studentsArr이 studentAuto이름표를 가지도록 변경
+			studentsInfo.studentsArr = studentsInfo.studentAuto;
+			// pnum을 입력 받지 않았기때문에 , studentsArr배열의 크기에 pnum 라벨을 붙인다.
+			studentsInfo.pnum = studentsInfo.studentsArr.length;
+		}
+
+		// 랜덤한 숫자를 받을 1차원 randomArr - String으로 선언한 이유는 아래 2차원배열에 이름과 숫자를 함께담기위함
+		String[] randomArr = new String[studentsInfo.pnum];
+		Random rand = new Random();
+
+		// 랜덤 배열에서 중복숫자 제거
+		for (int i = 0; i < randomArr.length; i++) {
+			randomArr[i] = Integer.toString(rand.nextInt(studentsInfo.pnum) + 1);
+			for (int j = 0; j < i; j++) {
+				if (randomArr[i].equals(randomArr[j]))
+					i--;
+			}
+		}
+
+		// 학생의 이름을 저장한 studentArr과 randomArr의 인덱스를 매칭시켜서 2차원 배열에 담아준다.
+		String[][] matchArr = new String[studentsInfo.pnum][2];
+		for (int i = 0; i < studentsInfo.pnum; i++) {
+			matchArr[i][0] = studentsInfo.studentsArr[i];
+			matchArr[i][1] = randomArr[i];
+		}
+
+		// 랜덤으로 저장되어있는 숫자를 이름과 함께 1번부터 순서대로 정렬해준다.
+		// String numTemp = 숫자를 저장할 임시공간
+		// String nameTemp = 이름을 저장할 임시공간
+		// 2개씩 비교하기때문에 총 길이보다 -1
+		for (int j = 0; j < matchArr.length - 1; j++)
+			for (int i = 0; i < matchArr.length - 1 - j; i++) {
+				// 오름차순 정렬
+				if (Integer.parseInt(matchArr[i][1]) > Integer.parseInt(matchArr[i + 1][1])) {
+					String numTemp;
+					String nameTemp;
+					numTemp = matchArr[i][1];
+					matchArr[i][1] = matchArr[i + 1][1];
+					matchArr[i + 1][1] = numTemp;
+
+					nameTemp = matchArr[i][0];
+					matchArr[i][0] = matchArr[i + 1][0];
+					matchArr[i + 1][0] = nameTemp;
+				}
+			}
+
+		System.out.println("1,4,5조는 6명 / 2,3조는 4명으로 고정!");
+
+		int gnum1 = 6, gnum4 = 6, gnum5 = 6;
+		int gnum2 = 4, gnum3 = 4;
+		int[] gnums = { 6, 4, 4, 6, 6 };
+
+		String[][] groups = new String[5][];
+
+		for (int j = 0; j < 5; j++)
+			groups[j] = new String[gnums[j]];
+
+		for (int j = 0; j < 5; j++) {
+			for (int i = 0; i < gnums[j]; i++) {
+				int a=0;
+				groups[j][i] = matchArr[a][0];
+				a++;
+			}
+
+		}
+
+		for (int j = 0; j < 5; j++) {
+			System.out.printf("%d조: ", j + 1);
+			for (int i = 0; i < gnums[i]; i++) {
+				System.out.printf("%s ", groups[j][i]);
+			}
+		}
+//
+//		for (int j = 0; j < 5; j++) {
+//			groups[j] = Integer.toString(gnums[j]);
+//
+//			int count = 0; // 배열의 크기, 0~학생수만큼 증가하면서 저장된 이름값을 순서대로 받아올 수 있도록
+//
+//			for (int i = 0; i < gnum1; i++) {
+//				group1[i] = matchArr[count][0];
+//				count++;
+//			}
+//
+//			System.out.println("1조입니다" + Arrays.toString(group1));
+//		}
+//
+//		group1 = new String[gnum1];
+//
+//		int count = 0; // 배열의 크기, 0~학생수만큼 증가하면서 저장된 이름값을 순서대로 받아올 수 있도록
+//
+//		for (int i = 0; i < gnum1; i++) {
+//			group1[i] = matchArr[count][0];
+//			count++;
+//		}
+//
+//		System.out.println("1조입니다" + Arrays.toString(group1));
+//
+//		group2 = new String[gnum2];
+//
+//		for (int i = 0; i < gnum2; i++) {
+//			group2[i] = matchArr[count][0];
+//			count++;
+//		}
+//		System.out.println("2조입니다" + Arrays.toString(group2));
+//
+//		group3 = new String[gnum3];
+//
+//		for (int i = 0; i < gnum3; i++) {
+//			group3[i] = matchArr[count][0];
+//			count++;
+//		}
+//		System.out.println("3조입니다" + Arrays.toString(group3));
+//
+//		group4 = new String[gnum4];
+//
+//		for (int i = 0; i < gnum4; i++) {
+//			group4[i] = matchArr[count][0];
+//			count++;
+//		}
+//		System.out.println("4조입니다" + Arrays.toString(group4));
+//
+//		group5 = new String[gnum5];
+//		for (int i = 0; i < gnum5; i++) {
+//			group5[i] = matchArr[count][0];
+//			count++;
+//		}
+//		System.out.println("5조입니다" + Arrays.toString(group5));
+//
+//	}
+
+	}
+
+	static int inputMenu() {
+		Scanner sc = new Scanner(System.in);
+		System.out.println("┌────────────────────────┐");
+		System.out.println("│    자리배치 ₍ᐢ- ̫-ᐢ₎‧˚   │");
+		System.out.println("└────────────────────────┘");
+		System.out.println("\t 1. 학생 입력");
+		System.out.println("\t 2. 자동 입력");
+		System.out.println("\t 3. 자리 섞기");
+		System.out.println("\t 4. 엑셀 출력");
+		System.out.println("\t 5. 콘솔 출력");
+		System.out.println("\t 6. 종료 하기");
+		System.out.print("\t ₍ᐢᐢ₎·°선택:");
+		int menu = sc.nextInt();
+		return menu;
+	}
+
+	static void inputStudents(StudentsInfo studentsInfo) {
+		Scanner sc = new Scanner(System.in);
+		System.out.print("학생 수를 입력하세요>>");
+		int pnum = sc.nextInt();
+		studentsInfo.studentsArr = new String[pnum];
+
+		for (int i = 0; i < pnum; i++) {
+			System.out.print((i + 1) + "번째학생이름>>\n");
+			String name = sc.next();
+			studentsInfo.studentsArr[i] = name;
+		}
+
+	}
 
 } // end of class

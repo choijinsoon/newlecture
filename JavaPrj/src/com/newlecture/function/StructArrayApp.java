@@ -7,16 +7,13 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-
-public class App {
+public class StructArrayApp {
 	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		int kor = 0;
-		int eng = 0;
-		int math = 0;
 
 		Scanner scan = new Scanner(System.in);
-		
+
+		Exam[] exams = new Exam[3];
+		int index = 0;
 
 		EXIT: while (true) {
 
@@ -24,23 +21,19 @@ public class App {
 
 			switch (menu) {
 			case 1:
-				int[] nums = inputExam(kor, eng, math); // 함수사용
-				
-				kor = nums[0];
-				eng = nums[1];
-				math = nums[2];
+				inputExams(exams, index);
 				break;
 			case 2:
-				printExam(kor, eng, math); // 함수사용
+				printExams(exams, index);
 				break;
 			case 3:
-				saveExam(kor, eng, math); // 함수사용
+				// saveExam(exam);
 				break;
 			case 4:
-				readExam(kor, eng, math); // 함수사용
+				// readExam(exam);
 				break;
 			case 5:
-				System.out.println("Bye~~~"); 
+				System.out.println("Bye~~~");
 				break EXIT;
 
 			default:
@@ -50,11 +43,10 @@ public class App {
 		}
 	}
 
-// 메인 메뉴 출력 및 메뉴 입력 함수
 	static int inputMenu() {
 		Scanner scan = new Scanner(System.in);
 		System.out.print("┌─────────────────────────────┐\n");
-		System.out.print("│            메인 메뉴           │\n");
+		System.out.print("│            메인 메뉴          │\n");
 		System.out.print("└─────────────────────────────┘\n");
 		System.out.println("1. 성적입력");
 		System.out.println("2. 성적출력");
@@ -66,8 +58,7 @@ public class App {
 		return menu;
 	}
 
-// 1. 성적입력 
-	static int[] inputExam(int kor, int eng, int math) {
+	static void inputExams(Exam[] exams, int index) {
 		Scanner scan = new Scanner(System.in);
 		System.out.print("┌─────────────────────────────┐\n");
 		System.out.print("│            메인 입력          │\n");
@@ -90,58 +81,61 @@ public class App {
 			nums[i] = temp;
 		}
 
-		kor = nums[0];
-		eng = nums[1];
-		math = nums[2];
-
-		return nums;
+		Exam exam = new Exam();
+		exam.kor = nums[0];
+		exam.eng = nums[1];
+		exam.math = nums[2];
+		
+		exams[index] = exam; 
+		
+		index++;
 
 	}
 
-//2. 성적출력
-	static void printExam(int kor, int eng, int math) {
-		int total = kor + eng + math;
-		float avg = total / 3.0f;
+	static void printExams(Exam[] exams, int size) {
 
 		System.out.print("┌─────────────────────────────┐\n");
-		System.out.print("│            성적 출력           │\n");
+		System.out.print("│            성적 출력          │\n");
 		System.out.print("└─────────────────────────────┘\n");
 
-		System.out.printf("kor : %d\n", kor);
-		System.out.printf("eng : %d\n", eng);
-		System.out.printf("math : %d\n", math);
-		System.out.printf("total : %d\n", total);
-		System.out.printf("avg : %f\n", avg);
+		for (int i = 0; i < size; i++) {
+			int kor = exams[i].kor;
+			int eng = exams[i].eng;
+			int math = exams[i].math;
+			
+			int total = kor + eng + math;
+			float avg = total / 3.0f;
+			System.out.printf("kor : %d\n", kor);
+			System.out.printf("eng : %d\n", eng);
+			System.out.printf("math : %d\n", math);
+			System.out.printf("total : %d\n", total);
+			System.out.printf("avg : %f\n", avg);
+		}
 	}
 
-//3. 성적저장
-	static void readExam(int kor, int eng, int math) throws IOException {
+	static void readExam(Exam exam) throws IOException {
 		FileInputStream fis = new FileInputStream("res/data.csv");
 		Scanner fscan = new Scanner(fis);
 
 		String titles = fscan.nextLine(); // 필드명 행 건너뛰기
 		String[] nums = fscan.nextLine().split(",");
-		kor = Integer.parseInt(nums[0]);
-		eng = Integer.parseInt(nums[1]);
-		math = Integer.parseInt(nums[2]);
+		exam.kor = Integer.parseInt(nums[0]);
+		exam.eng = Integer.parseInt(nums[1]);
+		exam.math = Integer.parseInt(nums[2]);
 
 		fscan.close();
 		fis.close();
 
 	}
 
-//4. 성적읽기
-	static void saveExam(int kor, int eng, int math) throws IOException {
+	static void saveExam(Exam exam) throws IOException {
 		FileOutputStream fos = new FileOutputStream("res/data.csv");
 		PrintStream fout = new PrintStream(fos);
 
 		fout.println("kor,eng,math");
-		fout.printf("%d,%d,%d\n", kor, eng, math);
+		fout.printf("%d,%d,%d\n", exam.kor, exam.eng, exam.math);
 
 		fout.close();
 		fos.close();
 	}
-
-
-
 }

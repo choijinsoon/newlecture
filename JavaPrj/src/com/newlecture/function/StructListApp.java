@@ -7,16 +7,15 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.util.Scanner;
 
-
-public class App {
+public class StructListApp {
 	public static void main(String[] args) throws IOException {
-		// TODO Auto-generated method stub
-		int kor = 0;
-		int eng = 0;
-		int math = 0;
 
 		Scanner scan = new Scanner(System.in);
-		
+
+		ExamList list = new ExamList();
+
+		list.exams = new Exam[3];
+		list.index = 0;
 
 		EXIT: while (true) {
 
@@ -24,23 +23,19 @@ public class App {
 
 			switch (menu) {
 			case 1:
-				int[] nums = inputExam(kor, eng, math); // 함수사용
-				
-				kor = nums[0];
-				eng = nums[1];
-				math = nums[2];
+				inputExams(list);
 				break;
 			case 2:
-				printExam(kor, eng, math); // 함수사용
+				printExams(list);
 				break;
 			case 3:
-				saveExam(kor, eng, math); // 함수사용
+				saveExam(list);
 				break;
 			case 4:
-				readExam(kor, eng, math); // 함수사용
+				readExam(list);
 				break;
 			case 5:
-				System.out.println("Bye~~~"); 
+				System.out.println("Bye~~~");
 				break EXIT;
 
 			default:
@@ -50,11 +45,10 @@ public class App {
 		}
 	}
 
-// 메인 메뉴 출력 및 메뉴 입력 함수
 	static int inputMenu() {
 		Scanner scan = new Scanner(System.in);
 		System.out.print("┌─────────────────────────────┐\n");
-		System.out.print("│            메인 메뉴           │\n");
+		System.out.print("│            메인 메뉴          │\n");
 		System.out.print("└─────────────────────────────┘\n");
 		System.out.println("1. 성적입력");
 		System.out.println("2. 성적출력");
@@ -66,8 +60,7 @@ public class App {
 		return menu;
 	}
 
-// 1. 성적입력 
-	static int[] inputExam(int kor, int eng, int math) {
+	static void inputExams(ExamList list) {
 		Scanner scan = new Scanner(System.in);
 		System.out.print("┌─────────────────────────────┐\n");
 		System.out.print("│            메인 입력          │\n");
@@ -90,58 +83,64 @@ public class App {
 			nums[i] = temp;
 		}
 
-		kor = nums[0];
-		eng = nums[1];
-		math = nums[2];
+		Exam exam = new Exam();
+		exam.kor = nums[0];
+		exam.eng = nums[1];
+		exam.math = nums[2];
 
-		return nums;
+		list.exams[list.index] = exam;
+
+		list.index++;
 
 	}
 
-//2. 성적출력
-	static void printExam(int kor, int eng, int math) {
-		int total = kor + eng + math;
-		float avg = total / 3.0f;
+	static void printExams(ExamList list) {
 
 		System.out.print("┌─────────────────────────────┐\n");
-		System.out.print("│            성적 출력           │\n");
+		System.out.print("│            성적 출력          │\n");
 		System.out.print("└─────────────────────────────┘\n");
 
-		System.out.printf("kor : %d\n", kor);
-		System.out.printf("eng : %d\n", eng);
-		System.out.printf("math : %d\n", math);
-		System.out.printf("total : %d\n", total);
-		System.out.printf("avg : %f\n", avg);
+		for (int i = 0; i < list.index; i++) {
+			int kor = list.exams[i].kor;
+			int eng = list.exams[i].eng;
+			int math = list.exams[i].math;
+
+			int total = kor + eng + math;
+			float avg = total / 3.0f;
+			System.out.printf("kor : %d\n", kor);
+			System.out.printf("eng : %d\n", eng);
+			System.out.printf("math : %d\n", math);
+			System.out.printf("total : %d\n", total);
+			System.out.printf("avg : %f\n", avg);
+		}
 	}
 
-//3. 성적저장
-	static void readExam(int kor, int eng, int math) throws IOException {
-		FileInputStream fis = new FileInputStream("res/data.csv");
+	static void readExam(ExamList list) throws IOException {
+		FileInputStream fis = new FileInputStream("res/data.txt");
 		Scanner fscan = new Scanner(fis);
 
 		String titles = fscan.nextLine(); // 필드명 행 건너뛰기
-		String[] nums = fscan.nextLine().split(",");
-		kor = Integer.parseInt(nums[0]);
-		eng = Integer.parseInt(nums[1]);
-		math = Integer.parseInt(nums[2]);
+		for (int i = 0; i < list.index; i++) {
+			String[] nums = fscan.nextLine().split(",");
+			list.exams[i].kor = Integer.parseInt(nums[0]);
+			list.exams[i].eng = Integer.parseInt(nums[1]);
+			list.exams[i].math = Integer.parseInt(nums[2]);
+		}
 
 		fscan.close();
 		fis.close();
 
 	}
 
-//4. 성적읽기
-	static void saveExam(int kor, int eng, int math) throws IOException {
-		FileOutputStream fos = new FileOutputStream("res/data.csv");
+	static void saveExam(ExamList list) throws IOException {
+		FileOutputStream fos = new FileOutputStream("res/data.txt");
 		PrintStream fout = new PrintStream(fos);
 
 		fout.println("kor,eng,math");
-		fout.printf("%d,%d,%d\n", kor, eng, math);
+		for (int i = 0; i < list.index; i++)
+			fout.printf("%d,%d,%d\n", list.exams[i].kor, list.exams[i].eng, list.exams[i].math);
 
 		fout.close();
 		fos.close();
 	}
-
-
-
 }
