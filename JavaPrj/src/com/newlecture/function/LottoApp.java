@@ -55,7 +55,7 @@ public class LottoApp {
 	static void printLotto(Lotto lotto, String s) {
 		System.out.printf("%s : ", s);
 		for (int i = 0; i < lotto.nums.length; i++) {
-			for (int j = i + 1; j < lotto.nums.length; j++) {
+			for (int j = 0; j < lotto.nums.length; j++) {
 				if (lotto.nums[i] > lotto.nums[j]) {
 					int temp = lotto.nums[i];
 					lotto.nums[i] = lotto.nums[j];
