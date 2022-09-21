@@ -46,7 +46,7 @@ public class Board {
 	public void put(Omok omok) {
 		omok.xy(1, 1);
 		omok = new Omok();
-		buf[omok.y - 1][omok.x - 1] = omok.color;
+		//buf[omok.y - 1][omok.x - 1] = omok.color;
 
 	}
 
