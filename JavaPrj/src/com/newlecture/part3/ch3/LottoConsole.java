@@ -27,7 +27,7 @@ public class LottoConsole {
 		System.out.println("로또 번호 6개를 출력합니다");
 		lotto.sort();
 		for (int i = 0; i < 6; i++)
-			System.out.printf("%d ",lotto.get(i));
+			System.out.printf("%d ", lotto.get(i));
 
 	}
 }
