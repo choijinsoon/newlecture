@@ -51,7 +51,7 @@ public class Board {
 			int x = omoks[i].getX();
 			int y = omoks[i].getY();
 			int color = omoks[i].getColor();
-
+ 
 			if (color == 0)
 				buf[y][x] = '●';
 			else if (color == 1)
