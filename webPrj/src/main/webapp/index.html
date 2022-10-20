@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Insert title here</title>
+</head>
+<script>
+	// window.onload = function(){
+	// 	console.log("load 완료");
+	// 	let btnSend = document.getElementById("btn-send");
+	// 	let resultDiv = document.getElementById("result");
+	// 	let countInput = document.getElementById("count-input");
+		
+	// 	btnSend.onclick = function(e){
+	// 		e.preventDefault();
+			
+	// 		fetch(`hello?c=${countInput.value}`)
+	// 		.then((res)=>{				
+	// 			return res.text();
+	// 		})
+	// 		.then((data)=>{console.log(data)});
+			
+			
+			/*.then((data)=>{			
+				console.log(data);
+				resultDiv.innerHTML += data;
+			})*/
+			
+			
+			/*let request = new XMLHttpRequest();
+			//request.onreadystatechange = function(){
+			request.onload = function(){
+				if(request.readyState < 4)
+					return;
+				
+				let result = request.responseText;
+				console.log(result);
+				resultDiv.innerHTML += result;
+				
+				
+			};
+			request.open("GET", "hello?c="+countInput.value); //동기식으로 요청 : 주소창에 주소를 입력하는 행위와 같다 /화면 전환 없이 가져온다 /true: 비동기 
+			request.send(); //요청하고 기다리기 : 요청 버튼을 누르는 것과 같다*/
+	// 	};
+	// };
+</script>
+<body>
+	<h1>환영합니다</h1>
+	<div>
+		안녕하세요
+	</div>
+	<div>
+		<a href="/app.html">프로젝트 시연</a>
+	</div>
+	<!-- 인사말 횟수<br>
+	<a href="hello?c=1">1번</a><br>
+	<a href="hello?c=2">2번</a><br>
+	<a href="hello?c=10">10번</a><br>
+	<a href="hello?c=20">20번</a><br>
+	<form action="hello">
+		<label>기타:</label><input id="count-input" name="c" type="text">
+		<input id="btn-send" type="submit" value="요청"><br>
+	</form>
+	<div id="result">
+	</div> -->
+</body>
+</html>
