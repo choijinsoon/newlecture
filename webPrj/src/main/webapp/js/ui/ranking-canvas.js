@@ -1,6 +1,6 @@
-export default class IntroCanvas{
+export default class RankingCanvas{
     constructor(){
-
+        this.obj = document.getElementById("ranking-canvas");
     }
     draw(){
 
@@ -9,6 +9,6 @@ export default class IntroCanvas{
 
     }
     run(){
-        
+
     }
 }
