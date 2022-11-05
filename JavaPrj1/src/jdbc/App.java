@@ -128,6 +128,7 @@ public class App {
 
 	private static void updateMember() throws Exception {
 		Scanner scan = new Scanner(System.in);
+		int setId;
 
 		System.out.println("┌─────────────────────┐");
 		System.out.println("│       회원 수정        │");
@@ -135,8 +136,12 @@ public class App {
 		
 		System.out.print("수정할 ID : ");
 		int id = scan.nextInt();
-		System.out.print("아이디 : ");
-		int setId = scan.nextInt();
+		do {
+			System.out.print("아이디 : ");
+			setId = scan.nextInt();
+			if(checkId(setId))
+				System.out.println("아이디가 중복됩니다!");
+		}while(checkId(setId));
 		System.out.print("패스워드 : ");
 		String pwd = scan.next();
 		System.out.print("닉네임 : ");
@@ -180,6 +185,8 @@ public class App {
 			do {
 				System.out.print("아이디 : ");
 				id = scan.nextInt();
+				if(checkId(id))
+					System.out.println("아이디가 중복됩니다!");
 			}while(checkId(id));
 			
 			System.out.print("패스워드 : ");
@@ -277,10 +284,13 @@ public class App {
 			menu = scan.nextInt();
 			if(menu < 5)
 				break;
-			else if(menu == 5)
+			else if(menu == 5 && page > 1)
 				page -= 5;
 			else if(menu == 6)
 				page += 5;
+			else if(page == 1)
+				System.out.println("첫페이지 입니다.");
+			
 		} while(true);
 		return menu;
 		
