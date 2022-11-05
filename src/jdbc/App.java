@@ -24,7 +24,7 @@ public class App {
 
 	private static void listMember() throws Exception {
 		EXIT:
-		while(true) {
+		while(true) { 
 			//목록 출력
 			
 			//서브 메뉴
