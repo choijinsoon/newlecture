@@ -28,7 +28,7 @@ public class App {
 			//목록 출력
 			
 			//서브 메뉴
-			switch(inputMemberMenu()) { 
+			switch(inputMemberMenu()) {  
 			case 0:
 				serachMember();
 				break;
