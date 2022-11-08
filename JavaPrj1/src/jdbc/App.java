@@ -3,6 +3,9 @@ package jdbc;
 import java.sql.*;
 import java.util.*;
 
+import jdbc.entity.Member;
+import jdbc.service.MemberService;
+
 public class App {
 	public static void main(String[] args) throws Exception {
 		
@@ -63,33 +66,15 @@ public class App {
 		System.out.println("검색 ID : ");
 		int id = scan.nextInt();
 		
-		//목록 출력
-		String sql = "SELECT * FROM MEMBER WHERE ID = :1";
-		
-		String url = "jdbc:oracle:thin:@oracle.newlecture.com:1521/xepdb1"; //서비스 이름
-		
-		Class.forName("oracle.jdbc.driver.OracleDriver"); //DB DRIVER
-		Connection con = DriverManager.getConnection(url, "NEWLEC", "rland"); //JDBC DRIVER
-		PreparedStatement st = con.prepareStatement(sql);
-		st.setInt(1, id);
-		
-		ResultSet rs = st.executeQuery();
-		
+		MemberService service = new MemberService();
+		List<Member> list = service.getMember(id);		
 		
 		System.out.println("\tID \tPWD \tNICKNAME");
-		while(rs.next()) {
-			int gid = rs.getInt("ID");
-			String nickName = rs.getString("NICKNAME"); //DB 결과 집합의 column 이름
-			String pwd = rs.getString("PWD");
-			
-			System.out.printf("%10d %10s %10s\n", id, pwd, nickName);
-			
-		}
+		for(Member member : list) 
+			System.out.printf("%10d %10s %10s\n", member.getId(), member.getPwd(), member.getNickName());
 		
-		rs.close();
-		st.close();
-		con.close();
-		
+
+		System.out.println("회원 검색 완료");
 	}
 
 	private static void removeMember() throws Exception {
@@ -102,25 +87,8 @@ public class App {
 		System.out.print("아이디 : ");
 		int id = scan.nextInt();
 		
-		//sql 입력
-		String sql = "DELETE MEMBER WHERE ID = :1";
-		
-
-		String url = "jdbc:oracle:thin:@oracle.newlecture.com:1521/xepdb1"; //서비스 이름
-		
-		Class.forName("oracle.jdbc.driver.OracleDriver"); //DB DRIVER
-		Connection con = DriverManager.getConnection(url, "NEWLEC", "rland"); //JDBC DRIVER
-		PreparedStatement st = con.prepareStatement(sql);
-		
-		//sql 만들기
-		st.setInt(1, id);
-		
-		//sql 실행
-		st.executeUpdate();
-		
-		
-		st.close();
-		con.close();
+		MemberService service = new MemberService();
+		List<Member> list = service.deleteMember(id);
 		
 		System.out.println("회원 삭제 완료");
 		
@@ -136,40 +104,44 @@ public class App {
 		
 		System.out.print("수정할 ID : ");
 		int id = scan.nextInt();
-		do {
-			System.out.print("아이디 : ");
-			setId = scan.nextInt();
-			if(checkId(setId))
-				System.out.println("아이디가 중복됩니다!");
-		}while(checkId(setId));
 		System.out.print("패스워드 : ");
 		String pwd = scan.next();
-		System.out.print("닉네임 : ");
-		String nickName = scan.next();
-		
-		//sql 입력
-		String sql = "UPDATE MEMBER SET ID = :1, PWD = :2, NICKNAME = :3 WHERE ID = :4";
-		
+		if(checkPwd(id, pwd)) {
+			do {
+				System.out.print("변경할 ID : ");
+				setId = scan.nextInt();
+				if(checkId(setId))
+					System.out.println("아이디가 중복됩니다!");
+			}while(checkId(setId));
+			System.out.print("패스워드 : ");
+			String setPwd = scan.next();
+			System.out.print("닉네임 : ");
+			String nickName = scan.next();
+			
+			MemberService service = new MemberService();
+			List<Member> list = service.chageMember(id, setId, setPwd ,nickName);
+			
+			System.out.println("회원 수정 완료");	
+		}
+		else {
+			System.out.println("패스워드가 잘못되었습니다.");
+		}
+	}
 
-		String url = "jdbc:oracle:thin:@oracle.newlecture.com:1521/xepdb1";
+	private static boolean checkPwd(int id, String pwd) throws Exception {
+		boolean result = false;
 		
-		Class.forName("oracle.jdbc.driver.OracleDriver"); 
-		Connection con = DriverManager.getConnection(url, "NEWLEC", "rland"); 
-		PreparedStatement st = con.prepareStatement(sql);
+		MemberService service = new MemberService();
+		List<Member> list = service.getMember(id);
 		
-		//sql 만들기
-		st.setInt(1, setId);
-		st.setString(2, pwd);
-		st.setString(3, nickName);
-		st.setInt(4, id);
-		
-		//sql 실행
-		st.executeUpdate();
-		
-		st.close();
-		con.close();
-		
-		System.out.println("회원 수정 완료");
+		for(Member member : list) {
+			if(member.getPwd().equals(pwd))
+				result = true;
+			else
+				result = false;
+		}
+			
+		return result;
 		
 	}
 
@@ -194,28 +166,8 @@ public class App {
 			System.out.print("닉네임 : ");
 			String nickName = scan.next();
 			
-			
-			
-			//sql 입력
-			String sql = "INSERT INTO MEMBER(ID,PWD,NICKNAME) VALUES(:1,:2,:3)";
-			
-			
-			String url = "jdbc:oracle:thin:@oracle.newlecture.com:1521/xepdb1"; //서비스 이름
-			
-			Class.forName("oracle.jdbc.driver.OracleDriver"); //DB DRIVER
-			Connection con = DriverManager.getConnection(url, "NEWLEC", "rland"); //JDBC DRIVER
-			PreparedStatement st = con.prepareStatement(sql);
-			//sql 만들기
-			st.setInt(1, id);
-			st.setString(2, pwd);
-			st.setString(3, nickName);
-			
-			//sql 실행
-			st.executeUpdate();
-			
-			
-			st.close();
-			con.close();
+			MemberService service = new MemberService();
+			List<Member> list = service.setMember(id, pwd, nickName);
 			
 			System.out.println("회원 추가 완료");
 			System.out.println("계속 하시겠습니까? ( Y | N )");
@@ -227,20 +179,18 @@ public class App {
 	}
 
 	private static boolean checkId(int id) throws Exception {
-		String sql = "SELECT * FROM MEMBER WHERE ID = "+id;
+		boolean result = false;
 		
-		String url = "jdbc:oracle:thin:@oracle.newlecture.com:1521/xepdb1"; //서비스 이름
+		MemberService service = new MemberService();
+		List<Member> list = service.getMember(id);
 		
-		Class.forName("oracle.jdbc.driver.OracleDriver"); //DB DRIVER
-		Connection con = DriverManager.getConnection(url, "NEWLEC", "rland"); //JDBC DRIVER
-		Statement st = con.createStatement();		
-		ResultSet rs = st.executeQuery(sql);
-		
-		boolean result = rs.next();
-		rs.close();
-		st.close();
-		con.close();
-		
+		for(Member member : list) {
+			if(member.getId() == id)
+				result = true;
+			else
+				result = false;
+		}
+			
 		return result;
 		
 	}
@@ -248,50 +198,22 @@ public class App {
 	private static int inputMemberMenu() throws Exception {
 		Scanner scan = new Scanner(System.in);
 
-		int menu;
-		int page = 1;
-		do {
-			System.out.println("┌─────────────────────┐");
-			System.out.println("│       회원 관리        │");
-			System.out.println("└─────────────────────┘");
+		System.out.println("┌─────────────────────┐");
+		System.out.println("│       회원 관리        │");
+		System.out.println("└─────────────────────┘");
+		
+		MemberService service = new MemberService();
+		List<Member> list = service.getList();
+		
+		System.out.println("\tID \tPWD \tNICKNAME");
+		for(Member member : list) 
+			System.out.printf("%10d %10s %10s\n", member.getId(), member.getPwd(), member.getNickName());
+		
+		
+		System.out.println("(0.검색 1.추가 2.수정 3.삭제 4.상위메뉴)");
+		System.out.print("> ");
+		int menu = scan.nextInt();
 			
-			//목록 출력
-			String sql = "SELECT * FROM (SELECT ROWNUM NUM, MEMBER.* FROM MEMBER) WHERE NUM BETWEEN "+page+" AND "+(page+4);
-			
-			String url = "jdbc:oracle:thin:@oracle.newlecture.com:1521/xepdb1"; //서비스 이름
-			
-			Class.forName("oracle.jdbc.driver.OracleDriver"); //DB DRIVER
-			Connection con = DriverManager.getConnection(url, "NEWLEC", "rland"); //JDBC DRIVER
-			Statement st = con.createStatement();
-			ResultSet rs = st.executeQuery(sql);
-			
-			System.out.println("\tID \tPWD \tNICKNAME");
-			while(rs.next()) {
-				int id = rs.getInt("ID");
-				String nickName = rs.getString("NICKNAME"); //DB 결과 집합의 column 이름
-				String pwd = rs.getString("PWD");
-				
-				System.out.printf("%10d %10s %10s\n", id, pwd, nickName);
-				
-			}
-			
-			rs.close();
-			st.close();
-			con.close();
-			
-			System.out.println("(0.검색 1.추가 2.수정 3.삭제 4.상위메뉴 5.이전 6.다음)");
-			System.out.print("> ");
-			menu = scan.nextInt();
-			if(menu < 5)
-				break;
-			else if(menu == 5 && page > 1)
-				page -= 5;
-			else if(menu == 6)
-				page += 5;
-			else if(page == 1)
-				System.out.println("첫페이지 입니다.");
-			
-		} while(true);
 		return menu;
 		
 	}

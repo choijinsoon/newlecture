@@ -23,7 +23,7 @@ public class Program {
 			System.out.println(obj);
 		
 		//List 계열 (순서가 키가 되는 컬렉션)
-		List list = new ArrayList();
+		List<Integer> list = new ArrayList<>();
 		list.add(3);
 		list.add(3);
 		list.add(3);
