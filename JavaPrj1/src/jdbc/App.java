@@ -119,7 +119,7 @@ public class App {
 			String nickName = scan.next();
 			
 			MemberService service = new MemberService();
-			List<Member> list = service.chageMember(id, setId, setPwd ,nickName);
+			List<Member> list = service.changeMember(id, setId, setPwd ,nickName);
 			
 			System.out.println("회원 수정 완료");	
 		}
