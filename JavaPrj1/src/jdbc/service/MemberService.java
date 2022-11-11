@@ -52,7 +52,7 @@ public class MemberService {
 		return list;
 	}
 
-	public List<Member> changeMember(int id, int setId, String setPwd, String setNickName) throws Exception {
+	public List<Member> changeMember(int id, int setId, String setPwd, String setNickName) {
 		List<Member> list = new ArrayList();
 		String sql = "UPDATE MEMBER SET ID = :1, PWD = :2, NICKNAME = :3 WHERE ID = :4";
 		
